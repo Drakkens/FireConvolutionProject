@@ -6,7 +6,6 @@ package Classes.Model.Flame;
 
 import Classes.Model.ColorUtility.ColorPalette;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 

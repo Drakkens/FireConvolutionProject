@@ -11,7 +11,7 @@ import java.util.HashMap;
 public class ColorPalette {
     //Map Temperature Array with Colors
     private final HashMap<Integer, Integer> tempMap = new HashMap<>();
-    private ArrayList<TargetColor> targetColorArrayList;
+    private final ArrayList<TargetColor> targetColorArrayList;
 
     public HashMap<Integer, Integer> getTempMap() {
         return tempMap;
@@ -45,9 +45,9 @@ public class ColorPalette {
 
     }
 
-    public ArrayList<TargetColor> getTargetColorArrayList() {
-        return this.targetColorArrayList;
-    }
+//    public ArrayList<TargetColor> getTargetColorArrayList() {
+//        return this.targetColorArrayList;
+//    }
 
 //    public ArrayList<TargetColor> getTargetColorArrayList() {
 //        return this.targetColorArrayList;
