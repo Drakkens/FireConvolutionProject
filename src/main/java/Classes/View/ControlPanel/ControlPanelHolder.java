@@ -25,11 +25,11 @@ public class ControlPanelHolder extends JPanel {
 
         controller = new ControlPanelController(this);
 
-        constraints.resetConstraints().changeConstraintsPosition(0, 0);
-        this.add(new FireControlPanel(this), constraints);
+        constraints.resetConstraints().changeConstraintsPosition(0, 0).changeConstraintsWeight(0, 1);
+        this.add(new FireControlPanel(new Dimension(this.getWidth(), this.getHeight() / 3),this), constraints);
 
         constraints.changeConstraintsPosition(0, 1);
-        this.add(new ConvolutionControlPanel(this), constraints);
+        this.add(new ConvolutionControlPanel(new Dimension(this.getWidth(), this.getHeight() / 3), this), constraints);
 
         constraints.changeConstraintsPosition(0, 2);
         this.add(new GeneralControlPanel(this), constraints);

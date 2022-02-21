@@ -42,6 +42,12 @@ public class ConstraintsUtils extends GridBagConstraints {
 
     }
 
+    public ConstraintsUtils changeInsets(int top, int left, int bottom, int right) {
+        this.insets = new Insets(top, left, bottom, right);
+
+        return this;
+    }
+
     public ConstraintsUtils changeConstraintsDimensions(int width, int height) {
         this.gridwidth = width;
         this.gridheight = height;

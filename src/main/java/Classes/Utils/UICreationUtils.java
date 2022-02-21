@@ -1,9 +1,12 @@
 package Classes.Utils;
 
+import Classes.Model.ColorUtility.TargetColor;
+
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public record UICreationUtils(JPanel container, GridBagConstraints constraints) {
 
@@ -31,8 +34,21 @@ public record UICreationUtils(JPanel container, GridBagConstraints constraints) 
 
     }
 
-    public void createComboBox() {
+    public JComboBox<Object> createComboBox(ArrayList<?> sourceArray, ActionListener actionListener) {
+        JComboBox<Object> comboBox = new JComboBox<>(sourceArray.toArray());
+        comboBox.setPrototypeDisplayValue("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+        comboBox.addActionListener(actionListener);
+        container.add(comboBox, constraints);
 
+        return comboBox;
+    }
+
+    public JSpinner createSpinner(SpinnerNumberModel spinnerNumberModel, ChangeListener changeListener) {
+        JSpinner spinner = new JSpinner(spinnerNumberModel);
+        spinner.addChangeListener(changeListener);
+        container.add(spinner, constraints);
+
+        return spinner;
     }
 
 }

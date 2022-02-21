@@ -9,6 +9,7 @@ import java.awt.*;
 
 public class Main extends JFrame {
     private final ImageViewerHolder imageViewHolder;
+    private final ControlPanelHolder controlPanelHolder;
 
     public Main() {
         super("Fire");
@@ -20,10 +21,11 @@ public class Main extends JFrame {
         this.setLayout(new GridBagLayout());
         ConstraintsUtils constraints = new ConstraintsUtils();
 
-        constraints.resetConstraints().changeConstraintsPosition(0, 0).changeConstraintsWeight(1, 1);
-        this.add(new ControlPanelHolder(this, new Dimension(this.getWidth() / 2, this.getHeight())), constraints);
+        constraints.resetConstraints().changeConstraintsPosition(0, 0).changeConstraintsDimensions(1, 1);
+        controlPanelHolder = new ControlPanelHolder(this, new Dimension(this.getWidth() / 2, this.getHeight()));
+        this.add(controlPanelHolder, constraints);
 
-        constraints.changeConstraintsPosition(1, 0).changeConstraintsWeight(1, 1);
+        constraints.changeConstraintsPosition(1, 0).changeConstraintsDimensions(2, 1).changeConstraintsWeight(1, 1);
         imageViewHolder = new ImageViewerHolder(this, new Dimension(this.getWidth() / 2, this.getHeight()));
         this.add(imageViewHolder, constraints);
 
@@ -36,6 +38,9 @@ public class Main extends JFrame {
 
     public ImageViewerHolder getImageViewHolder() {
         return this.imageViewHolder;
+    }
+    public ControlPanelHolder getControlPanelHolder() {
+        return this.controlPanelHolder;
     }
 
 

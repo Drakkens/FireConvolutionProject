@@ -1,68 +1,154 @@
 package Classes.Controller;
 
+import Classes.Model.ColorUtility.ColorPalette;
+import Classes.Model.ColorUtility.ColorPaletteHandler;
 import Classes.Model.Convolution.ConvolutedImage;
+import Classes.Model.Flame.Flame;
 import Classes.View.ControlPanel.ControlPanelHolder;
 import Classes.View.ImageViewer.View;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
-import static javax.swing.JFileChooser.APPROVE_OPTION;
+import static Classes.Utils.ImageUtils.resize;
+import static Classes.Utils.ImageUtils.selectFile;
 
-public record ControlPanelController(ControlPanelHolder controlPanelHolder) {
+public final class ControlPanelController {
 
-    private File selectFile() {
+    private final ColorPaletteHandler colorPaletteHandler = new ColorPaletteHandler();
+    private final ControlPanelHolder controlPanelHolder;
+    private View defaultView;
+    private View convolutedView;
+    private View fireView;
+    private View onFireView;
 
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setFileFilter(new FileNameExtensionFilter("Image Documents", "jpg", "png", "jpeg"));
+    public ControlPanelController(ControlPanelHolder controlPanelHolder) {
+        this.controlPanelHolder = controlPanelHolder;
 
-        //Reads Document
-        if (fileChooser.showOpenDialog(null) == APPROVE_OPTION) {
-            return fileChooser.getSelectedFile();
-        } else {
-            return null;
-        }
     }
 
     public void setDefaultImage() {
         try {
-            View defaultView = controlPanelHolder.getMain().getImageViewHolder().getDefaultImageView();
-            View onFireView = controlPanelHolder.getMain().getImageViewHolder().getOnFireView();
+            BufferedImage bufferedImage = ImageIO.read(Objects.requireNonNull(selectFile()));
 
-            BufferedImage bufferedImage = ImageIO.read(Objects.requireNonNull(this.selectFile()));
-            //Read Image from File Selector, Resize it and Set it on DefaultView
-            defaultView.setImage(this.resize(bufferedImage, defaultView.getWidth(), defaultView.getHeight()));
-            onFireView.setImage(this.resize(bufferedImage, onFireView.getWidth(), onFireView.getHeight()));
+            defaultView.setImage(resize(bufferedImage, defaultView.getWidth(), defaultView.getHeight()));
+            onFireView.setImage(resize(bufferedImage, onFireView.getWidth(), onFireView.getHeight()));
 
+            defaultView.drawImage();
+            onFireView.drawImage();
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private BufferedImage resize(BufferedImage image, int width, int height) {
-        Image tempImage = image.getScaledInstance(width, height, Image.SCALE_FAST);
+    public int[][] createKernel(JSpinner[][] spinners) {
+        int[][] kernel = new int[3][3];
 
-        BufferedImage bImage = new BufferedImage(width, height, image.getType());
+        for (int i = 0; i < spinners.length; i++) {
+            for (int j = 0; j < spinners[1].length; j++) {
+                kernel[i][j] = (int) spinners[i][j].getValue();
+            }
+        }
 
-        Graphics2D g2d = bImage.createGraphics();
-        g2d.drawImage(tempImage, 0, 0, null);
-        g2d.dispose();
+        return kernel;
+    }
 
-        return bImage;
+    public void startFire(int[][] smallSparkablePixels, int[][] bigSparkablePixels ) {
+        fireView.setFlame(new Flame(fireView.getWidth(), fireView.getHeight(), new ColorPalette(colorPaletteHandler.getColorArray()), smallSparkablePixels));
+        onFireView.setFlame(new Flame(onFireView.getWidth(), onFireView.getHeight(), new ColorPalette(colorPaletteHandler.getColorArray()), bigSparkablePixels));
+
+    }
+
+    public void changeColors() {
+        fireView.getFlame().setColorPalette(new ColorPalette(colorPaletteHandler.getColorArray()));
+        onFireView.getFlame().setColorPalette(new ColorPalette(colorPaletteHandler.getColorArray()));
+
     }
 
 
-    public void setConvolutedImage() {
-        BufferedImage image = controlPanelHolder.getMain().getImageViewHolder().getDefaultImageView().getImage();
-        View convolutedView = controlPanelHolder.getMain().getImageViewHolder().getConvolutedImageView();
+    public void toggleFire() {
+        fireView.getFlame().setRunning(onFireView.getFlame().isRunning());
+        onFireView.getFlame().setRunning(onFireView.getFlame().isRunning());
 
-        convolutedView.setImage(new ConvolutedImage(image));
+    }
+
+    public void changeSparkChance(int chance) {
+        fireView.getFlame().setSparkChance(chance);
+        onFireView.getFlame().setSparkChance(chance);
+
+    }
+
+    public void changeCoolingChance(int chance) {
+        fireView.getFlame().setCoolingChance(chance);
+        onFireView.getFlame().setCoolingChance(chance);
+
+    }
+
+
+    public void setConvolutedImage(JSpinner[][] spinners) {
+        BufferedImage image = controlPanelHolder.getMain().getImageViewHolder().getDefaultImageView().getImage();
+        ConvolutedImage convolutedImage = new ConvolutedImage(image, createKernel(spinners));
+
+        convolutedView.setImage(convolutedImage);
+        convolutedView.drawImage();
+
+        BufferedImage resizedImage = resize(controlPanelHolder.getMain().getImageViewHolder().getDefaultImageView().getImage(), onFireView.getWidth(), onFireView.getHeight());
+        ConvolutedImage resizedConvolutedImage = new ConvolutedImage(resizedImage, createKernel(spinners));
+
+        startFire(convolutedImage.getPixelValues(), resizedConvolutedImage.getPixelValues());
+    }
+
+    public ColorPaletteHandler getColorHandler() {
+        return colorPaletteHandler;
+
+    }
+
+    public Color chooseColor() {
+        return JColorChooser.showDialog(null, "Select Color", null);
+    }
+
+    public ControlPanelHolder controlPanelHolder() {
+        return controlPanelHolder;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || obj.getClass() != this.getClass()) return false;
+        var that = (ControlPanelController) obj;
+        return Objects.equals(this.controlPanelHolder, that.controlPanelHolder);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(controlPanelHolder);
+    }
+
+    @Override
+    public String toString() {
+        return "ControlPanelController[" +
+                       "controlPanelHolder=" + controlPanelHolder + ']';
+    }
+
+
+    public void setDefaultView(View defaultView) {
+        this.defaultView = defaultView;
+    }
+
+    public void setConvolutedView(View convolutedView) {
+        this.convolutedView = convolutedView;
+    }
+
+    public void setFireView(View fireView) {
+        this.fireView = fireView;
+    }
+
+    public void setOnFireView(View onFireView) {
+        this.onFireView = onFireView;
     }
 }
