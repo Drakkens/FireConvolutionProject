@@ -6,22 +6,20 @@ package Classes.Model.Flame;
 
 import Classes.Model.ColorUtility.ColorPalette;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 
 public class Flame extends BufferedImage implements Runnable {
     private final int dimX;
     private final int dimY;
-    private boolean running = true;
-    private int sparkChance = 7;
-    private int coolingChance = 33;
-
-    private ColorPalette colorPalette;
-
     private final int[][] temperatureArray;
     private final int[][] flameArray;
-
     private final int[][] sparkablePixels;
+    private boolean running = true;
+    private int sparkChance = 30;
+    private int coolingChance = 33;
+    private ColorPalette colorPalette;
 
     public Flame(int dimX, int dimY, ColorPalette colorPalette, int[][] sparkablePixels) {
         super(dimX, dimY, TYPE_INT_ARGB);
@@ -79,7 +77,7 @@ public class Flame extends BufferedImage implements Runnable {
      * Populates temperatureArray with newly calculated temperature values
      */
     public void modifyArrays() {
-        setCoolSpots(this.getHeight(), coolingChance);
+        setCoolSpots(coolingChance);
         setSparks(sparkChance);
 
         for (int y = dimY - 2; y > 0; y--) {
@@ -99,7 +97,7 @@ public class Flame extends BufferedImage implements Runnable {
         int bPixelTemp = temperatureArray[width][height + 1];
         int bRPixelTemp = temperatureArray[width + 1][height + 1];
 
-        return (int) (((currentPixelTemp + bRPixelTemp + bPixelTemp + bLPixelTemp) * 0.25));
+        return (int) (((currentPixelTemp + bRPixelTemp + bPixelTemp + bLPixelTemp) * 0.25) - 0.03);
     }
 
 
@@ -124,11 +122,14 @@ public class Flame extends BufferedImage implements Runnable {
     /**
      *
      */
-    private void setCoolSpots(int height, int chance) {
-        for (int y = dimY - 1; y > dimY - height; y--) {
-            for (int x = 0; x < dimX - 1; x++) {
-                if (chance / (Math.random() * 100) > 1) {
-                    temperatureArray[x][y] = (int) (temperatureArray[x][y] * 0.85);
+    private void setCoolSpots(int chance) {
+        for (int i = 0; i < sparkablePixels.length; i++) {
+            for (int j = 0; j < sparkablePixels[0].length; j++) {
+//                if (sparkablePixels[i][j] == 1) {
+                    if (chance / (Math.random() * 100) > 1) {
+                        temperatureArray[i][j] = (int) (temperatureArray[i][j] * 0.85);
+
+//                    }
                 }
             }
         }

@@ -28,6 +28,7 @@ public class ColorPalette {
 
             }
         }
+        tempMap.put(0, new Color(0,0,0,0).getRGB());
     }
 
     private int createColorFromInterpolation(Color startColor, Color endColor, int totalIterations, int currentIteration) {
@@ -42,6 +43,10 @@ public class ColorPalette {
     private int createColor(int red, int green, int blue, int alpha) {
         return alpha << 24 | red << 16 | green << 8 | blue;
 
+    }
+
+    public ArrayList<TargetColor> getTargetColorArrayList() {
+        return this.targetColorArrayList;
     }
 
 //    public ArrayList<TargetColor> getTargetColorArrayList() {

@@ -97,6 +97,9 @@ public final class ControlPanelController {
         convolutedView.setImage(convolutedImage);
         convolutedView.drawImage();
 
+        fireView.setImage(convolutedImage);
+        fireView.drawImage();
+
         BufferedImage resizedImage = resize(controlPanelHolder.getMain().getImageViewHolder().getDefaultImageView().getImage(), onFireView.getWidth(), onFireView.getHeight());
         ConvolutedImage resizedConvolutedImage = new ConvolutedImage(resizedImage, createKernel(spinners));
 
@@ -111,30 +114,6 @@ public final class ControlPanelController {
     public Color chooseColor() {
         return JColorChooser.showDialog(null, "Select Color", null);
     }
-
-    public ControlPanelHolder controlPanelHolder() {
-        return controlPanelHolder;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (ControlPanelController) obj;
-        return Objects.equals(this.controlPanelHolder, that.controlPanelHolder);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(controlPanelHolder);
-    }
-
-    @Override
-    public String toString() {
-        return "ControlPanelController[" +
-                       "controlPanelHolder=" + controlPanelHolder + ']';
-    }
-
 
     public void setDefaultView(View defaultView) {
         this.defaultView = defaultView;

@@ -7,7 +7,7 @@ public class ConvolutedImage extends BufferedImage {
     private final int[][] kernel;
     private int kernelSum;
     private final BufferedImage image;
-    private int brightnessThreshold = 1;
+    private float brightnessThreshold = 0.5F;
     private int[][] pixelValues;
 
 

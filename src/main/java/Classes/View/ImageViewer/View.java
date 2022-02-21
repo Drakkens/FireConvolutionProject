@@ -49,7 +49,15 @@ public class View extends Canvas implements Runnable {
     @Override
     public void paint(Graphics g) {
         if (this.flame != null) {
-            g.drawImage(flame, 0, 0, this);
+
+            BufferedImage c = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            c.getGraphics().drawImage(image, 0, 0, null);
+            c.getGraphics().drawImage(flame, 0, 0, null);
+
+            g.drawImage(c, 0, 0, this);
+//
+//            g.drawImage(image, 0,0, this);
+//            g.drawImage(flame, 0, 0, this);
 
         }
     }

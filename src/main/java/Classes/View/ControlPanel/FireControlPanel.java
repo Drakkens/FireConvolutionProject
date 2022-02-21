@@ -47,6 +47,21 @@ public class FireControlPanel extends JPanel {
 //        constraints.changeConstraintsPosition(0, 2);
 //        creationUtils.createButton("Start Flame", e -> controlPanelHolder.getController().startFire());
 
+        constraints.changeConstraintsPosition(0,2);
+        creationUtils.createButton("Toggle Running", e -> controlPanelHolder.getController().toggleFire());
+
+        constraints.changeConstraintsPosition(1, 2);
+        creationUtils.createLabel("Spark Chance");
+
+        constraints.changeConstraintsPosition(2, 2);
+        creationUtils.createSlider(0, 100, e -> controlPanelHolder.getController().changeSparkChance(((JSlider) e.getSource()).getValue()));
+
+        constraints.changeConstraintsPosition(3, 2);
+        creationUtils.createLabel("Cooling Chance");
+
+        constraints.changeConstraintsPosition(4, 2);
+        creationUtils.createSlider(0, 100, e -> controlPanelHolder.getController().changeCoolingChance(((JSlider) e.getSource()).getValue()));
+
         this.setVisible(true);
     }
 }

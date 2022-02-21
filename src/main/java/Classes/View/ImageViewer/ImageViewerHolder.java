@@ -8,10 +8,10 @@ import javax.swing.*;
 import java.awt.*;
 
 public class ImageViewerHolder extends JPanel {
-    private final View defaultImageView;
-    private final View convolutedImageView;
-    private final View fireImageView;
-    private final View onFireImageView;
+    private View defaultImageView;
+    private View convolutedImageView;
+    private View fireImageView;
+    private View onFireImageView;
 
     public ImageViewerHolder(Main main, Dimension dimension) {
         super(new GridBagLayout());
@@ -66,6 +66,12 @@ public class ImageViewerHolder extends JPanel {
 
     public View getOnFireView() {
         return this.onFireImageView;
+    }
+
+    public void resetImageView() {
+        convolutedImageView = new View(new Dimension(this.getWidth() / 3, this.getHeight() / 4));
+        fireImageView = new View(new Dimension(this.getWidth() / 3, this.getHeight() / 4));
+        onFireImageView = new View(new Dimension(this.getWidth(), this.getHeight() - fireImageView.getHeight()));
     }
 
 }

@@ -2,16 +2,15 @@ package Classes.Model.ColorUtility;
 
 import javax.swing.*;
 import java.awt.*;
-import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ColorPaletteHandler {
 
     private final ArrayList<TargetColor> targetColorArrayList = new ArrayList<>(Arrays.asList(
-            new TargetColor(255, new Color(255, 255, 0, 128)),
-            new TargetColor(170, new Color(255, 128, 0, 128)),
-            new TargetColor(50, new Color(255, 0, 0, 128)),
+            new TargetColor(255, new Color(255, 255, 0, 255)),
+            new TargetColor(170, new Color(255, 128, 0, 255)),
+            new TargetColor(64, new Color(255, 0, 0, 128)),
             new TargetColor(0, new Color(0, 0, 0, 0))));
 
 
@@ -33,9 +32,8 @@ public class ColorPaletteHandler {
         targetColorArrayList.removeAll(targetColorArrayList);
         comboBox.removeAllItems();
 
-
         for (int i = 0; i < 4; i++) {
-            TargetColor color = new TargetColor(255 - ((64 * i) - 1), new Color((int) Math.floor(Math.random() * 255), (int) Math.floor(Math.random() * 255), (int) Math.floor(Math.random() * 255), 128));
+            TargetColor color = new TargetColor(256 - (64 * i), new Color((int) Math.floor(Math.random() * 255), (int) Math.floor(Math.random() * 255), (int) Math.floor(Math.random() * 255), 128));
             targetColorArrayList.add(color);
             comboBox.addItem(color);
         }

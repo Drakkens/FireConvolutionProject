@@ -26,7 +26,7 @@ public class ConvolutionControlPanel extends JPanel {
                 constraints.changeConstraintsPosition(i, j);
                 spinners[i][j - 1] = creationUtils.createSpinner(new SpinnerNumberModel(), null);
                 spinners[i][j - 1].setPreferredSize(new Dimension(100, 20));
-
+                spinners[i][j - 1].setValue(-1);
             }
         }
 
